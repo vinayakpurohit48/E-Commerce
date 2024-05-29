@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1031748363934",
+    "project_id": "pc-bazaar",
+    "storage_bucket": "pc-bazaar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031748363934:android:9e05e58862511bcf77fd8f",
+        "android_client_info": {
+          "package_name": "com.example.pcbazaar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuyx3UtV8gssBxw2FD6_5senhZMA3CpuY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
