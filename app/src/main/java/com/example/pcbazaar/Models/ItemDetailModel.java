@@ -1,18 +1,27 @@
 package com.example.pcbazaar.Models;
 
 public class ItemDetailModel {
-    private String itemId, itemName, itemDescription, itemRating, itemPrice, itemComments, itemImagelink;
+    private String itemId, itemName, itemDescription, itemRating, itemPrice, itemComments, itemImageLink, itemTotalViewer;
 
     public ItemDetailModel() {
     }
 
-    public ItemDetailModel(String itemId, String itemName, String itemDescription, String itemRating, String itemPrice, String itemComments, String itemImagelink) {
+    public ItemDetailModel(String itemId, String itemName, String itemDescription, String itemRating, String itemPrice, String itemComments, String itemImageLink, String itemTotalViewer) {
+        this.itemId = itemId;
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.itemRating = itemRating;
         this.itemPrice = itemPrice;
         this.itemComments = itemComments;
-        this.itemImagelink = itemImagelink;
+        this.itemImageLink = itemImageLink;
+        this.itemTotalViewer = itemTotalViewer;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
         this.itemId = itemId;
     }
 
@@ -56,19 +65,19 @@ public class ItemDetailModel {
         this.itemComments = itemComments;
     }
 
-    public String getItemImagelink() {
-        return itemImagelink;
+    public String getItemImageLink() {
+        return itemImageLink;
     }
 
-    public String getItemId() {
-        return itemId;
+    public void setItemImageLink(String itemImageLink) {
+        this.itemImageLink = itemImageLink;
     }
 
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
+    public String getItemTotalViewer() {
+        return itemTotalViewer;
     }
 
-    public void setItemImagelink(String itemImagelink) {
-        this.itemImagelink = itemImagelink;
+    public void setItemTotalViewer(String itemTotalViewer) {
+        this.itemTotalViewer = itemTotalViewer;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.pcbazaar.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.pcbazaar.ItemDetailActivity;
 import com.example.pcbazaar.Models.ItemDetailModel;
 import com.example.pcbazaar.R;
 
@@ -42,30 +44,32 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        updateSubTotal();
         holder.itemPrice = Integer.parseInt(itemList.get(position).getItemPrice());
         holder.tvItemName.setText(itemList.get(position).getItemName());
         holder.tvItemPrice.setText(String.valueOf(holder.itemPrice));
         holder.tvItemCountedPrice.setText(String.valueOf(holder.itemPrice * holder.itemCounter));
         holder.tvItemCount.setText(String.valueOf(holder.itemCounter));
         Glide.with(context)
-                .load(itemList.get(position).getItemImagelink())
+                .load(itemList.get(position).getItemImageLink())
                 .into(holder.itemImageView);
 
         holder.tvBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.itemCounter++;
-                holder.tvItemCount.setText(String.valueOf(holder.itemCounter));
-                holder.tvItemCountedPrice.setText(String.valueOf(holder.itemPrice * holder.itemCounter));
-                itemList.get(position).setItemPrice(String.valueOf(holder.itemPrice * holder.itemCounter));
-                updateSubTotal();
+                if (holder.itemCounter<10){
+                    holder.itemCounter++;
+                    holder.tvItemCount.setText(String.valueOf(holder.itemCounter));
+                    holder.tvItemCountedPrice.setText(String.valueOf(holder.itemPrice * holder.itemCounter));
+                    itemList.get(position).setItemPrice(String.valueOf(holder.itemPrice * holder.itemCounter));
+                    updateSubTotal();
+                }
             }
         });
-
         holder.tvBtnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.itemCounter > 0) {
+                if (holder.itemCounter > 1) {
                     holder.itemCounter--;
                     holder.tvItemCount.setText(String.valueOf(holder.itemCounter));
                     holder.tvItemCountedPrice.setText(String.valueOf(holder.itemPrice * holder.itemCounter));
@@ -73,6 +77,20 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                     updateSubTotal();
                 }
             }
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            int id = holder.getBindingAdapterPosition();
+            Intent intent = new Intent(context, ItemDetailActivity.class);
+            intent.putExtra("itemName",itemList.get(id).getItemName());
+            intent.putExtra("itemPrice",itemList.get(id).getItemPrice());
+            intent.putExtra("itemDescription",itemList.get(id).getItemDescription());
+            intent.putExtra("itemRating",itemList.get(id).getItemRating());
+            intent.putExtra("itemComments",itemList.get(id).getItemComments());
+            intent.putExtra("imageUrl",itemList.get(id).getItemImageLink());
+            intent.putExtra("itemId",itemList.get(id).getItemId());
+            context.startActivity(intent);
+
         });
     }
 

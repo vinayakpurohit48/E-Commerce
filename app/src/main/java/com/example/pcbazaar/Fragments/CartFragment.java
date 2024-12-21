@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnTotalCha
     Button btnOrderNow;
     CartItemAdapter cartItemAdapter;
 
+    LinearLayout linearLayout;
     List<ItemDetailModel> itemList = new ArrayList<>();
 
 
@@ -55,17 +57,33 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnTotalCha
         tvSubTotal = view.findViewById(R.id.tvSubTotal);
         btnOrderNow = view.findViewById(R.id.btnOrderNow);
         cartItemsRecyclerView = view.findViewById(R.id.cartItemsRecyclerView);
+        linearLayout = view.findViewById(R.id.linearLayout);
 
         cartItemAdapter = new CartItemAdapter(getContext(), itemList);
+
         fetchCartItems();
-        cartItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        cartItemsRecyclerView.setAdapter(cartItemAdapter);
+        if (itemList.isEmpty()){
+            tvEmptyCart.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.GONE);
+        }
+        else {
+            linearLayout.setVisibility(View.VISIBLE);
+            cartItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            cartItemsRecyclerView.setAdapter(cartItemAdapter);
+            tvEmptyCart.setVisibility(View.GONE);
+        }
+
 
         cartItemAdapter.setOnTotalChangedListener(new CartItemAdapter.OnTotalChangedListener() {
             @Override
             public void OnTotalChange(int total) {
-                tvSubTotal.setText(String.valueOf(total));
+                tvSubTotal.setText("₹"+String.valueOf(total));
+                tvDeliveryCost.setText("₹"+ String.valueOf(total+100));
+                tvTaxCost.setText("₹"+String.valueOf((total*18)/100)+" (18%)");
+                int totalCost = total + 100 + (total*18)/100;
+                tvTotalCost.setText("₹"+totalCost);
             }
+
         });
 
 
@@ -98,7 +116,6 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnTotalCha
         });
     }
     public void OnTotalChange(int total) {
-        Toast.makeText(getContext(), "idar aaya ", Toast.LENGTH_SHORT).show();
-        tvSubTotal.setText(String.valueOf(total));
+        
     }
 }

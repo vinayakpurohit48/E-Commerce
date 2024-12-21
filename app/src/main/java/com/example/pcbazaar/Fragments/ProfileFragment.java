@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.example.pcbazaar.Models.UserModel;
 import com.example.pcbazaar.R;
 import com.example.pcbazaar.Utils.FirebaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,8 +22,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 public class ProfileFragment extends Fragment {
 
-    EditText edMobileNumber,edEmail,edName,edAddress,edPostalCode;
-
+    EditText edMobileNumber,edEmail,edName,edAddress;
+    UserModel user;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -34,11 +36,23 @@ public class ProfileFragment extends Fragment {
         edMobileNumber = view.findViewById(R.id.edMobileNumber);
         edName = view.findViewById(R.id.edName);
         edEmail = view.findViewById(R.id.edEmail);
-        edPostalCode = view.findViewById(R.id.edPostalCode);
         edAddress = view.findViewById(R.id.edAddress);
 
-        SharedPreferences preferences = getContext().getSharedPreferences("prefUserDetails", Context.MODE_PRIVATE);
-        edName.setText(preferences.getString("UserName","null"));
+        loadUserDetails();
+        setEditTextEnabled(false);
+
+        if (user.getAddress().equals("") || user.getName().equals("") || user.getEmail().equals("") || user.getMobileNumber().equals("")) {
+            setEditTextEnabled(true);
+            if (user.getAddress().equals(""))
+                edAddress.setError("Please Enter The Detail");
+            if (user.getName().equals(""))
+                edName.setError("Please Enter The Detail");
+            if (user.getEmail().equals(""))
+                edEmail.setError("Please Enter The Detail");
+            if (user.getMobileNumber().equals(""))
+                edMobileNumber.setError("Please Enter The Field");
+        }
+
 
         return view;
     }
@@ -55,14 +69,28 @@ public class ProfileFragment extends Fragment {
             edMobileNumber.setEnabled(true);
             edName.setEnabled(true);
             edAddress.setEnabled(true);
-            edPostalCode.setEnabled(true);
             edEmail.setEnabled(true);
         } else {
             edMobileNumber.setEnabled(false);
             edName.setEnabled(false);
             edAddress.setEnabled(false);
-            edPostalCode.setEnabled(false);
             edEmail.setEnabled(false);
         }
+    }
+
+    void loadUserDetails(){
+        setInProgress(true);
+        FirebaseUtil.getCurrentUserDetails().get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                setInProgress(false);
+                setEditTextEnabled(false);
+                if (task.isSuccessful()){
+                    user = task.getResult().toObject(UserModel.class);
+                } else {
+
+                }
+            }
+        });
     }
 }

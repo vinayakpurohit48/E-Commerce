@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.example.pcbazaar.Adapters.HorizontalItemsRecyclerAdapter;
@@ -21,6 +21,7 @@ import com.example.pcbazaar.Models.ItemDetailModel;
 import com.example.pcbazaar.Models.offerItemDetailModel;
 import com.example.pcbazaar.R;
 import com.example.pcbazaar.Utils.FirebaseUtil;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,6 +39,7 @@ public class HomeFragment extends Fragment {
     List<ItemDetailModel> itemList = new ArrayList<>();
     List<offerItemDetailModel> bannerList = new ArrayList<>();
     HorizontalItemsRecyclerAdapter horizontalItemsRecyclerAdapter;
+    ShimmerFrameLayout moreProductsShimmerLayout, watchedItemsShimmerLayout, popularItemsShimmerLayout;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -54,6 +56,9 @@ public class HomeFragment extends Fragment {
         popularItemsRecyclerView = view.findViewById(R.id.popularItemsRecyclerView);
         watchedItemsRecyclerView = view.findViewById(R.id.watchedItemsRecyclerView);
         moreProductsRecyclerView = view.findViewById(R.id.moreProductsRecyclerView);
+        popularItemsShimmerLayout = view.findViewById(R.id.popularItemsShimmerLayout);
+        watchedItemsShimmerLayout = view.findViewById(R.id.watchedItemsShimmerLayout);
+        moreProductsShimmerLayout = view.findViewById(R.id.moreProductsShimmerLayout);
 
         horizontalItemsRecyclerAdapter = new HorizontalItemsRecyclerAdapter(getContext(), itemList);
         popularItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -65,6 +70,8 @@ public class HomeFragment extends Fragment {
         moreProductsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         moreProductsRecyclerView.setAdapter(horizontalItemsRecyclerAdapter);
 
+
+
         if (itemList.isEmpty())
             setTrendingItems();
         setupBannerItems(inflater);
@@ -73,6 +80,7 @@ public class HomeFragment extends Fragment {
     }
 
     void setTrendingItems() {
+        setInProgress(true);
         FirebaseUtil.getItems().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -85,10 +93,11 @@ public class HomeFragment extends Fragment {
                                 itemList.add(item);
                             }
                         }
+                        setInProgress(false);
                         horizontalItemsRecyclerAdapter.notifyDataSetChanged();
                     }
                 } else {
-                    Log.d("HomeFragment", "Error getting items: ", task.getException());
+                    Toast.makeText(getContext(), "Network Error !!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -114,5 +123,23 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mainViewFlipper.stopFlipping();
+    }
+
+    void setInProgress(Boolean isVisible){
+        if (isVisible){
+            popularItemsShimmerLayout.setVisibility(View.VISIBLE);
+            moreProductsShimmerLayout.setVisibility(View.VISIBLE);
+            watchedItemsShimmerLayout.setVisibility(View.VISIBLE);
+            popularItemsRecyclerView.setVisibility(View.GONE);
+            moreProductsRecyclerView.setVisibility(View.GONE);
+            watchedItemsRecyclerView.setVisibility(View.GONE);
+        } else {
+            popularItemsShimmerLayout.setVisibility(View.GONE);
+            moreProductsShimmerLayout.setVisibility(View.GONE);
+            watchedItemsShimmerLayout.setVisibility(View.GONE);
+            popularItemsRecyclerView.setVisibility(View.VISIBLE);
+            moreProductsRecyclerView.setVisibility(View.VISIBLE);
+            watchedItemsRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -48,11 +48,11 @@ public class ItemDetailActivity extends AppCompatActivity {
         btnAddToCart = findViewById(R.id.btnAddToCart);
         
         if (getIntent() == null){
-            onBackPressed();
             Toast.makeText(this, "Something getting wrong", Toast.LENGTH_SHORT).show();
+            onBackPressed();
         }
 
-        itemDetailModel = new ItemDetailModel(getIntent().getStringExtra("itemId"),getIntent().getStringExtra("itemName"),getIntent().getStringExtra("itemDescription"), getIntent().getStringExtra("itemRating"), getIntent().getStringExtra("itemPrice"), getIntent().getStringExtra("itemComments"), getIntent().getStringExtra("imageUrl"));
+        itemDetailModel = new ItemDetailModel(getIntent().getStringExtra("itemId"),getIntent().getStringExtra("itemName"),getIntent().getStringExtra("itemDescription"), getIntent().getStringExtra("itemRating"), getIntent().getStringExtra("itemPrice"), getIntent().getStringExtra("itemComments"), getIntent().getStringExtra("imageUrl"), getIntent().getStringExtra("itemTotalViewer"));
         tvItemTitle.setText(itemDetailModel.getItemName());
         tvItemPrice.setText(itemDetailModel.getItemPrice());
         tvRating.setText(itemDetailModel.getItemRating());

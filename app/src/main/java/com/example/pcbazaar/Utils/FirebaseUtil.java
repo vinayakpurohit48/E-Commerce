@@ -30,4 +30,5 @@ public class FirebaseUtil {
     public static CollectionReference getShoppedItems(){
         return FirebaseFirestore.getInstance().collection("Users").document("Interacted Items").collection("Shopped Items");
     }
+
 }
